@@ -30,6 +30,18 @@ class ArkanoidGame{
         this.ball = this.createBall();
         this.bricks = this.createBricks();
 
+        this.setupControls();
+
+        this.gameState = 'READY';
+
+        // скорость мяча
+        this.ballVX = 0;
+        this.ballVY = 0;
+
+        this.BALL_SPEED = 5;
+
+        this.setupClickHandler();
+        this.setupGameLoop();
     }
 
     createPlatform() {
@@ -89,6 +101,90 @@ class ArkanoidGame{
         return ball;
     }
 
+    setupControls() {
+        window.addEventListener('mousemove', (event) => {
+            this.movePlatform(event);
+        });
+    }
+
+    movePlatform(){
+        const rect = this.app.view.getBoundingClientRect();
+
+        const mouseX = event.clientX - rect.left;
+
+        let newX = mouseX - this.PLATFORM_WIDTH / 2;
+
+        if (newX < 0) {
+            newX = 0;
+        }
+        if (newX > this.FIELD_WIDTH - this.PLATFORM_WIDTH) {
+            newX = rhis.FIELD_WIDTH - this.PLATFORM_WIDTH;
+        }
+
+        this.platform.x = newX;
+    }
+
+    setupClickHandler() {
+        window.addEventListener('click', () => {
+            if (this.gameState === 'READY') {
+                this.launchBall();
+            }
+        });
+    }
+
+    launchBall() {
+        this.gameState = 'PLAYING';
+
+        this.ballVX = this.BALL_SPEED;
+        this.ballVY = -this.BALL_SPEED;
+    }
+
+    setupGameLoop() {
+        this.app.ticker.add(() => {
+            if(this.gameState === 'PLAYING') {
+                this.updateBall();
+            } else if (this.gameState === 'READY') {
+                this.stickBallToPLatform();
+            }
+        });
+    }
+
+    stickBallToPLatform() {
+        this.ball.x = this.platform.x + this.PLATFORM_WIDTH / 2;
+
+        this.ball.y = this.PLATFORM_Y - this.BALL_RADIUS - 2;
+    }
+
+    updateBall() {
+        this.ball.x += this.ballVX;
+        this.ball.y += this.ballVY;
+
+        if (this.ball.x - this.BALL_RADIUS < 0) {
+            this.ball.x = this.BALL_RADIUS;
+            this.ballVX = -this.ballVX;
+        }
+
+        if (this.ball.x + this.BALL_RADIUS > this.FIELD_WIDTH) {
+            this.ball.x = this.FIELD_WIDTH - this.BALL_RADIUS;
+            this.ballVX = -this.ballVX;
+        }
+
+        if (this.ball.y - this.BALL_RADIUS < 0) {
+            this.ball.y = this.BALL_RADIUS;
+            this.ballVY = -this.ballVY;
+        }
+
+        if (this.ball.y - this.BALL_RADIUS > this.FIELD_HEIGHT) {
+            this.resetBall();
+        }
+    }
+
+    resetBall() {
+        this.gameState = 'READY';
+        this.ballVX = 0;
+        this.ballVY = 0;
+        this.stickBallToPLatform();
+    }
 
 }
 window.addEventListener('load', () => {
