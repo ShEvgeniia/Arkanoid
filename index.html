@@ -6,7 +6,18 @@
     <link rel = "stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/pixi.js@7.4.2/dist/pixi.min.js"></script></head>
 <body>
-    <div id="game-container"></div>
-    <script src = "script.js"></script>
+    <div id="game-wrapper">
+        <div id="game-container"></div>
+        
+        <div id="hud">
+            <div id="player-indicator">PLAYER 1</div>
+            <div id="high-score-label">HIGH SCORE</div>
+            <div id="high-score-value">50000</div>
+            <div id="score-value">0</div>
+            <div id="lives-container"></div>
+            <div id="level-display">LEVEL 1</div>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
