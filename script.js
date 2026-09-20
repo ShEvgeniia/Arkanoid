@@ -37,7 +37,6 @@ class ArkanoidGame {
         this.setupClickHandler();
         this.setupGameLoop();
 
-        // ДВА ИГРОКА
         this.currentPlayer = 1;
         this.players = {
             1: { score: 0, lives: 3 },
